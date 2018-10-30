@@ -111,7 +111,7 @@ int main(){
     TH1D* h_ptratio_s_data = new TH1D("Data_Signal__ptratio_"+num[i], "p_{T}^{#gamma_{1}} / p_{T}^{#gamma_{2}}", nbins, 1, 20);
     //Sideband
     TH1D* h_ptratio_b_right = new TH1D("Data_Right__ptratio_"+num[i], "p_{T}^{#gamma_{1}} /p_{T}^{#gamma_{2}}", nbins, 1, 20);
-    TH1D* h_ptratio_b_left = new TH1D("Data_Right__ptratio_"+num[i], "p_{T}^{#gamma_{1}} /p_{T}^{#gamma_{2}}", nbins, 1, 20);
+    TH1D* h_ptratio_b_left = new TH1D("Data_Left__ptratio_"+num[i], "p_{T}^{#gamma_{1}} /p_{T}^{#gamma_{2}}", nbins, 1, 20);
     //==============================================                              
     const Long64_t entries_s = chain_s.GetEntries();                             
     //=============================================== 
