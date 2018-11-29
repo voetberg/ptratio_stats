@@ -4,25 +4,25 @@
 #include <utility>            
 #include <chrono>             
                               
-#include <boost/optional.hpp> 
 #include <TFile.h>            
 #include <TChain.h>           
 #include <TH1.h>              
 #include <TLorentzVector.h>   
 #include <TTree.h>            
                               
-#include "Higgs2diphoton.hh"  
                               
 using namespace std;          
 bool sort_pt (TLorentzVector i, TLorentzVector j){return (i.Pt()>j.Pt());}                         
-Higgs2diphoton Hdecay;        
                               
 int main(){                                                               
   //Loading in data
   TChain chain_d("mini"); 
 
-  chain_d.Add("$TMPDIR/data1516.root"); 
-  chain_d.Add("$TMPDIR/data17.root"); 
+  //chain_d.Add("$TMPDIR/data1516.root"); 
+  //chain_d.Add("$TMPDIR/data17.root"); 
+
+  chain_d.Add("/home/voetberg/voetberg/ntuples/data1516.root"); 
+  chain_d.Add("/home/voetberg/voetberg/ntuples/data17.root"); 
 
   //Setting chains 
   constexpr size_t max = 15; 
@@ -52,11 +52,9 @@ int main(){
   num.emplace_back("400");
   num.emplace_back("400p");
 
+  TString outname = "ptratio_data.root"; 
+  TFile* out = TFile::Open(outname, "RECREATE"); 
   for (int i=0; i<4; ++i){
-    TString outname = "ptratio_data_" + num[i] + ".root"; 
-    TFile* out = TFile::Open(outname, "RECREATE"); 
-    cout<<"Writing "<<outname<<"....."<<endl; 
-
     //===============================================                             
     //Ouputs
     int nbins = 38.;
@@ -64,8 +62,8 @@ int main(){
     //Signal
     TH1D* h_ptratio_s_data = new TH1D("Data_Signal__ptratio_"+num[i], "p_{T}^{#gamma_{1}} / p_{T}^{#gamma_{2}}", nbins, 1, 20);
     //Sideband
-    TH1D* h_ptratio_b_right = new TH1D("Data_Right__ptratio_"+num[i], "p_{T}^{#gamma_{1}} /p_{T}^{#gamma_{2}}", nbins, 1, 20);
-    TH1D* h_ptratio_b_left = new TH1D("Data_Left__ptratio_"+num[i], "p_{T}^{#gamma_{1}} /p_{T}^{#gamma_{2}}", nbins, 1, 20);
+    //TH1D* h_ptratio_b_right = new TH1D("Data_Right__ptratio_"+num[i], "p_{T}^{#gamma_{1}} /p_{T}^{#gamma_{2}}", nbins, 1, 20);
+    //TH1D* h_ptratio_b_left = new TH1D("Data_Left__ptratio_"+num[i], "p_{T}^{#gamma_{1}} /p_{T}^{#gamma_{2}}", nbins, 1, 20);
 
     //Data 
     //Go through each event                                                     
@@ -115,11 +113,6 @@ int main(){
       //Delta R                                                                    
       select &= (y1.DeltaR(jet)>.4);                                            
       select &= (y2.DeltaR(jet)>.4);                                            
-      //Jet Cuts                                                                
-      for (int i=0; i<jet_n; ++i){                                              
-        select &= (t_jet[i].Pt()>30);                                           
-        select &= (t_jet[i].Rapidity()<4.4);                                    
-      }              
       
       if (i==0){select &= (yy.Pt()>250. && yy.Pt()<300.);}                      
       if (i==1){select &= (yy.Pt()>300. && yy.Pt()<350);}                       
@@ -130,18 +123,15 @@ int main(){
         ptratio = abs(y1.Pt()/y2.Pt());
 
         bool sig = ((yy.M()>122.)&&(yy.M()<128.));
-        bool left = ((yy.M()>105.)&&(yy.M()<121.));
-        bool right = ((yy.M()>129.)&&(yy.M()<160.));
+        //bool left = ((yy.M()>105.)&&(yy.M()<121.));
+        //bool right = ((yy.M()>129.)&&(yy.M()<160.));
        
         if (sig){h_ptratio_s_data->Fill(ptratio);}
-        if (left){h_ptratio_b_left->Fill(ptratio);}
-        if (right){h_ptratio_b_right->Fill(ptratio);}
+        //if (left){h_ptratio_b_left->Fill(ptratio);}
+        //if (right){h_ptratio_b_right->Fill(ptratio);}
       }
     }
-
-    cout<<outname<<" written"<<endl; 
-
-    out->Write(); 
-    out->Close(); 
   }
+  out->Write(); 
+  out->Close(); 
 }
