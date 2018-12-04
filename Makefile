@@ -31,7 +31,7 @@ ROOT_LDLIBS += $(shell $(rpath_script))
 
 CXXFLAGS += $(ROOT_CXXFLAGS)
 LDFLAGS += $(ROOT_LDFLAGS)
-LDLIBS += $(ROOT_LDLIBS) -lTreePlayer
+LDLIBS += $(ROOT_LDLIBS) -lTreePlayer -lMinuit
 
 SRCS := $(shell find $(SRC) -type f -name '*$(EXT)')
 DEPS := $(patsubst $(SRC)/%$(EXT),$(BLD)/%.d,$(SRCS))
@@ -39,7 +39,7 @@ DEPS := $(patsubst $(SRC)/%$(EXT),$(BLD)/%.d,$(SRCS))
 GREP_EXES := grep -rl '^ *int \+main *(' $(SRC) --include='*$(EXT)'
 EXES := $(patsubst $(SRC)%$(EXT),$(BIN)%,$(shell $(GREP_EXES)))
 
-$(BIN)/mc_dis: $(BLD)/Higgs2diphoton.o
+$(BIN)/fit_hist: $(BLD)/Higgs2diphoton.o
 
 all: $(EXES)
 

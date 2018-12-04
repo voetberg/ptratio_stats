@@ -50,7 +50,8 @@ void chisq(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag){
   //calculate chisquare
    Double_t chisq = 0;
    for (int i=0; i<nbins; i++) {
-     chisq += pow((hist_data[i]-funct(hist_data[i],par)),2)/hist_data[i];
+     Double_t calc = funct(hist_data[i],par); 
+     chisq += pow((hist_data[i]-calc),2)/calc;
    }
    f=chisq;
 }
@@ -92,7 +93,7 @@ int main(){
     gMinuit->mnexcm("SET ERR", arglist,1,ier); 
     
     //Set initial values 
-    static Double_t param_start[4] ={50000,20000,20000,-1000}; 
+    static Double_t param_start[4] ={100,-10,10,-1}; 
     static Double_t step = .01;
     gMinuit->mnparm(0, "a1", param_start[0], step, 0,0, ier); 
     gMinuit->mnparm(1, "a2", param_start[1], step, 0,0, ier); 
